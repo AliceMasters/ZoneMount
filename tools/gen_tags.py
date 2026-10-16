@@ -56,7 +56,7 @@ if __name__ == "__main__":
     curated = json.loads(pathlib.Path(sys.argv[2]).read_text(encoding="utf8")) if len(sys.argv) > 2 else {}
     rows, untagged = [], []
     for e in sorted(ents, key=lambda e: e["id"]):
-        if "test mount" in e["name"].lower():
+        if "test mount" in e["name"].lower() or e["name"].startswith(("[PH]", "[DND]", "(PH)")):
             continue
         c = curated.get(str(e["id"]), curated.get(e["name"]))
         tags = c if c is not None else fmt(*derive(e))
