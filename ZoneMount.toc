@@ -9,6 +9,7 @@
 ## Category: Mounts
 
 Tags.lua
+Data.lua
 Themes.lua
 Core.lua
 Bindings.xml
