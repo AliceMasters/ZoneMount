@@ -51,13 +51,31 @@ ns.themes = {
     { label = "The Maw / Korthia",      maps = { 1543, 1961 }, keywords = { "Maw", "Mawsworn", "Korthian", "Shadehound", "Soulbound" } },
     { label = "Zereth Mortis",          maps = { 1970 },       keywords = { "Zereth", "Protoform", "Vespoid", "Silken", "Resonant", "Cypher" } },
 
+    -- Midnight (map IDs from guide /way coordinates; confirm with /zmount where)
+    { label = "Silvermoon City",        maps = { 2393 },       tags = { "bird", "gold", "red", "royal", "arcane" } },
+    { label = "Eversong Woods",         maps = { 2395 },       tags = { "bird", "red", "gold", "arcane", "fire" } },
+    { label = "Isle of Quel'Danas",     maps = { 122 },        tags = { "holy", "gold", "bird", "fire" } },
+    { label = "Zul'Aman",               maps = { 2437 },       tags = { "bear", "bird", "raptor", "nature", "green" } },
+    { label = "Harandar",               maps = { 2413 },       tags = { "nature", "green", "snail", "insect", "pink" } },
+    { label = "Voidstorm",              maps = { 2405 },       tags = { "void", "arcane", "purple", "cat", "ray" } },
+
     -- Dragonflight
     { label = "Dragon Isles",           maps = { 1978 },       keywords = { "Drake", "Velocidrake", "Wylderdrake", "Highland", "Dracthyr", "Dragonrider" } },
+    { label = "Waking Shores",          maps = { 2022 },       tags = { "fire", "drake", "red" } },
+    { label = "Ohn'ahran Plains",       maps = { 2023 },       tags = { "nature", "bird", "stag", "green" } },
+    { label = "Azure Span",             maps = { 2024 },       tags = { "blue", "otter", "ice", "rhino" } },
+    { label = "Thaldraszus",            maps = { 2025 },       tags = { "bronze", "time", "drake", "gold" } },
+    { label = "Forbidden Reach",        maps = { 2151 },       tags = { "stone", "drake", "ice", "raptor" } },
+    { label = "Zaralek Cavern",         maps = { 2133 },       tags = { "stone", "fire", "drake", "insect" } },
     { label = "Emerald Dream",          maps = { 2200 },       keywords = { "Dream", "Emerald", "Wildseed", "Verdant" }, tags = { "nature", "green" } },
     { label = "Amirdrassil",            maps = { 2239 },       tags = { "nature", "green", "drake" } },
 
     -- The War Within
     { label = "Khaz Algar",             maps = { 2274 },       keywords = { "Earthen", "Skyskimmer", "Delver", "Stonevault", "Cavern", "Armadillo", "Dornogal" } },
+    { label = "Isle of Dorn",           maps = { 2248 },       tags = { "stone", "rhino", "sea", "mech" } },
+    { label = "The Ringing Deeps",      maps = { 2214 },       tags = { "stone", "insect", "mech", "fire" } },
+    { label = "Hallowfall",             maps = { 2215 },       tags = { "holy", "arcane", "mech", "white" } },
+    { label = "K'aresh",                maps = { 2371 },       tags = { "void", "arcane", "insect", "bird", "purple" } },
     { label = "Azj-Kahet",              maps = { 2255 },       keywords = { "Spider", "Nerubian", "Weaver", "Web", "Skitter", "Carapace", "Arachnid" } },
     { label = "Undermine",              maps = { 2346 },       keywords = { "Goblin", "Trike", "Bruiser", "Rocket", "Steamwheedle", "Bilgewater", "Venture", "Jalopy", "Chopper", "Mechacycle" } },
 }
