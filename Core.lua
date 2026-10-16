@@ -170,7 +170,18 @@ end
 local function HookJournal()
     if ns.journalHooked or not MountJournal or not MountJournal.ScrollBox then return end
     ns.journalHooked = true
-    ScrollUtil.AddInitializedFrameCallback(MountJournal.ScrollBox, DecorateRow, ns, true)
+    local box = MountJournal.ScrollBox
+    local function Refresh()
+        box:ForEachFrame(function(frame)
+            local data = frame.GetElementData and frame:GetElementData()
+            DecorateRow(frame, data)
+        end)
+    end
+    -- Frames are recycled on scroll/filter/search, so re-decorate on every change.
+    box:RegisterCallback(ScrollBoxListMixin.Event.OnUpdate, Refresh, ns)
+    box:RegisterCallback(ScrollBoxListMixin.Event.OnDataRangeChanged, Refresh, ns)
+    MountJournal:HookScript("OnShow", Refresh)
+    Refresh()
 end
 
 local ev = CreateFrame("Frame")
