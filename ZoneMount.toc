@@ -1,0 +1,14 @@
+## Interface: 120100
+
+## Title: Zone Mount
+## Author: Alice
+## Version: 0.1
+## Notes: One button. Mounts you on a mount that fits the zone you're standing in.
+## IconTexture: 413588
+## SavedVariables: ZoneMountDB
+## Category: Mounts
+
+Tags.lua
+Themes.lua
+Core.lua
+Bindings.xml

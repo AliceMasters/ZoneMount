@@ -1,0 +1,5 @@
+<Bindings>
+    <Binding name="ZONEMOUNT_SUMMON" header="ZONEMOUNT" category="ADDONS">
+        ZoneMount_Summon()
+    </Binding>
+</Bindings>
