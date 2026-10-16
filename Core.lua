@@ -41,9 +41,8 @@ local function Score(name, theme)
         end
     end
     if theme.keywords then
-        local lname = name:lower()
         for _, kw in ipairs(theme.keywords) do
-            if lname:find(kw:lower(), 1, true) then score = score + 1 break end
+            if ns.NameHas(name, kw) then score = score + 1 break end
         end
     end
     return score

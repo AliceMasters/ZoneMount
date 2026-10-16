@@ -19,7 +19,7 @@ ns.tagRules = {
     spider  = { "Spider", "Nerubian", "Weaver", "Web", "Arachnid" },
     raptor  = { "Raptor", "Devilsaur", "Pterrordax" },
     horse   = { "Horse", "Stallion", "Steed", "Mare", "Charger", "Palomino" },
-    wolf    = { "Wolf", "Warg", "Hound" },
+    wolf    = { "Wolf", "Warg", "Hound", "Frostwolf" },
     blue    = { "Blue", "Azure", "Sapphire", "Cobalt" },
     red     = { "Red", "Crimson", "Scarlet", "Ruby" },
     black   = { "Black", "Onyx", "Obsidian", "Midnight" },
@@ -32,6 +32,18 @@ ns.tagRules = {
 -- ns.tagOverrides["Mount Name"] = { "tag", ... }  (replaces rule-derived tags)
 ns.tagOverrides = {}
 
+local function Normalize(s)
+    return " " .. (s:lower():gsub("[^%w']", " ")) .. " "
+end
+
+-- Word-start match; words shorter than 4 letters (red, sea, ice, ram...) must be a whole word.
+-- So "red" does not match "Armored" and "sea" does not match "Seabraid".
+function ns.NameHas(name, word)
+    local n, w = Normalize(name), word:lower():gsub("[^%w']", " ")
+    if #w < 4 then return n:find(" " .. w .. " ", 1, true) ~= nil end
+    return n:find(" " .. w, 1, true) ~= nil
+end
+
 local cache = {}
 function ns.TagsFor(name)
     if cache[name] then return cache[name] end
@@ -41,10 +53,9 @@ function ns.TagsFor(name)
         for _, t in ipairs(ns.tagOverrides[name]) do tags[t] = true end
     else
         tags = {}
-        local lname = name:lower()
         for tag, words in pairs(ns.tagRules) do
             for _, w in ipairs(words) do
-                if lname:find(w:lower(), 1, true) then tags[tag] = true break end
+                if ns.NameHas(name, w) then tags[tag] = true break end
             end
         end
     end
