@@ -139,27 +139,50 @@ local function TagString(mountName, mountID)
     return table.concat(list, ", ")
 end
 
+-- Display colors: colors are themselves, elements get their element's hue,
+-- creatures fall back to a warm cream.
+local TAG_COLORS = {
+    red = "ff6b6b", blue = "6bb5ff", green = "7bdc6e", yellow = "ffe066", orange = "ffa94d",
+    purple = "c792ea", pink = "ff9ecb", brown = "c49a6c", black = "b4b4c8", white = "f5f5f5",
+    gray = "bcbcbc", gold = "ffd24a", bronze = "d9a05b", teal = "4fd1c5",
+    fire = "ff7a3d", ice = "8fd8ff", nature = "8fdc7a", void = "a77bff", holy = "fff0a0",
+    arcane = "c28bff", fel = "9bff3b", undead = "a9c98a", sea = "4fb3d9", storm = "9ac8ff",
+    stone = "b3a58f", mech = "c0c8d0", time = "e0b36a", royal = "e6c35c", venom = "b6e03c",
+    demonic = "ff5a5a", flying = "d0e4ff", desert = "e8c987",
+}
+local TAG_DEFAULT = "e6dcc3"
+
+local function ColorTagString(mountName, mountID)
+    local list = {}
+    for tag in pairs(ns.TagsFor(mountName, mountID)) do list[#list + 1] = tag end
+    table.sort(list)
+    for i, tag in ipairs(list) do
+        list[i] = ("|cff%s%s|r"):format(TAG_COLORS[tag] or TAG_DEFAULT, tag)
+    end
+    return table.concat(list, "|cff6a6a78  ·  |r")
+end
+
 local function DecorateRow(frame, data)
     local mountID = data and (data.mountID or (data.index and C_MountJournal.GetDisplayedMountID(data.index))) or frame.mountID
     if not mountID then return end
     local mountName = C_MountJournal.GetMountInfoByID(mountID)
     if not mountName then return end
-    frame.zmTagText = TagString(mountName, mountID)
+    frame.zmTagText = ColorTagString(mountName, mountID)
 
     if not frame.zmFS then
-        frame.zmFS = frame:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
-        frame.zmFS:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 44, 4)
+        frame.zmFS = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+        frame.zmFS:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 44, 3)
         frame.zmFS:SetJustifyH("LEFT")
+        frame.zmFS:SetWordWrap(false)
     end
-    local twoLines = frame.name and frame.name.GetNumLines and frame.name:GetNumLines() > 1
     frame.zmFS:SetText(frame.zmTagText)
-    frame.zmFS:SetShown(not twoLines and frame.zmTagText ~= "")
+    frame.zmFS:SetShown(frame.zmTagText ~= "")
 
     if not frame.zmHooked then
         frame.zmHooked = true
         frame:HookScript("OnEnter", function(self)
             if self.zmTagText and self.zmTagText ~= "" and GameTooltip:IsShown() then
-                GameTooltip:AddLine("Tags: " .. self.zmTagText, 0.4, 0.8, 1, true)
+                GameTooltip:AddLine("|cff66ccffTags:|r " .. self.zmTagText, 1, 1, 1, true)
                 GameTooltip:Show()
             end
         end)
