@@ -189,9 +189,11 @@ local function ExportMounts()
     local out = {}
     for _, mountID in ipairs(C_MountJournal.GetMountIDs()) do
         local name, _, _, _, _, _, _, _, _, _, isCollected = C_MountJournal.GetMountInfoByID(mountID)
-        if isCollected then
+        if name then
             local _, desc, _, _, typeID = C_MountJournal.GetMountInfoExtraByID(mountID)
             out[#out + 1] = {
+                id = mountID,
+                owned = isCollected and true or false,
                 name = name,
                 tags = TagString(name, mountID),
                 type = typeID,
