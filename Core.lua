@@ -31,13 +31,13 @@ local function ThemesForLocation()
     return found
 end
 
--- Tag overlap counts 2 each; a name-keyword hit counts 1.
-local function Score(name, theme)
+-- A tag matched in the name counts 2, in the description 1; a name-keyword hit counts 1.
+local function Score(name, mountID, theme)
     local score = 0
     if theme.tags then
-        local tags = ns.TagsFor(name)
+        local tags = ns.TagsFor(name, mountID)
         for _, t in ipairs(theme.tags) do
-            if tags[t] then score = score + 2 end
+            score = score + (tags[t] or 0)
         end
     end
     if theme.keywords then
@@ -56,7 +56,7 @@ local function UsableMounts(theme)
         local name, _, icon, _, isUsable, _, isFavorite, _, _, hidden, isCollected =
             C_MountJournal.GetMountInfoByID(mountID)
         if isCollected and isUsable and not hidden then
-            local s = theme and Score(name, theme) or 0
+            local s = theme and Score(name, mountID, theme) or 0
             if not theme or s > 0 then
                 out[#out + 1] = { id = mountID, name = name, icon = icon, fav = isFavorite, score = s }
             end
@@ -132,9 +132,9 @@ end)
 btn:SetScript("OnLeave", GameTooltip_Hide)
 
 -- Tags in the mount journal ---------------------------------------------------
-local function TagString(mountName)
+local function TagString(mountName, mountID)
     local list = {}
-    for tag in pairs(ns.TagsFor(mountName)) do list[#list + 1] = tag end
+    for tag in pairs(ns.TagsFor(mountName, mountID)) do list[#list + 1] = tag end
     table.sort(list)
     return table.concat(list, ", ")
 end
@@ -144,7 +144,7 @@ local function DecorateRow(frame, data)
     if not mountID then return end
     local mountName = C_MountJournal.GetMountInfoByID(mountID)
     if not mountName then return end
-    frame.zmTagText = TagString(mountName)
+    frame.zmTagText = TagString(mountName, mountID)
 
     if not frame.zmFS then
         frame.zmFS = frame:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
@@ -183,9 +183,33 @@ local function HookJournal()
     Refresh()
 end
 
+-- Dump every collected mount with its tags to SavedVariables so the tag rules can be
+-- tuned against real data (read ZoneMount.lua in WTF\...\SavedVariables after logout).
+local function ExportMounts()
+    local out = {}
+    for _, mountID in ipairs(C_MountJournal.GetMountIDs()) do
+        local name, _, _, _, _, _, _, _, _, _, isCollected = C_MountJournal.GetMountInfoByID(mountID)
+        if isCollected then
+            local _, desc, _, _, typeID = C_MountJournal.GetMountInfoExtraByID(mountID)
+            out[#out + 1] = {
+                name = name,
+                tags = TagString(name, mountID),
+                type = typeID,
+                desc = desc and desc:sub(1, 200) or "",
+            }
+        end
+    end
+    ZoneMountDB.export = out
+end
+
 local ev = CreateFrame("Frame")
 ev:RegisterEvent("ADDON_LOADED")
-ev:SetScript("OnEvent", function(_, _, name)
+ev:RegisterEvent("PLAYER_LOGOUT")
+ev:SetScript("OnEvent", function(_, event, name)
+    if event == "PLAYER_LOGOUT" then
+        if ZoneMountDB then pcall(ExportMounts) end
+        return
+    end
     if name == "Blizzard_Collections" then HookJournal() end
     if name ~= ADDON then return end
     if C_AddOns.IsAddOnLoaded("Blizzard_Collections") then HookJournal() end
